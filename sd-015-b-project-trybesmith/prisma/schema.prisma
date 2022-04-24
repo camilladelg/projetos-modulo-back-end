@@ -1,0 +1,39 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Order {
+  id       Int        @id @default(autoincrement())
+  userId   Int?
+  users    User?     @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "Orders_ibfk_1")
+  products Product[]
+
+  @@map("Orders")
+  @@index([userId], map: "userId")
+}
+
+model Product {
+  id      Int     @id @default(autoincrement())
+  name    String  @db.Text
+  amount  String  @db.Text
+  orderId Int?
+  orders  Order? @relation(fields: [orderId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "Products_ibfk_1")
+  @@map("Products")
+  @@index([orderId], map: "orderId")
+}
+
+model User {
+  id       Int      @id @default(autoincrement())
+  username String   @db.Text
+  classe   String   @db.Text
+  level    Int
+  password String   @db.Text
+  orders   Order[]
+
+  @@map("Users")
+}
