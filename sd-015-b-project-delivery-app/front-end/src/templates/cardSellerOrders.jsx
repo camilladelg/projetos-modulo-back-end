@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import SellerOrder from '../components/sellerOrder';
 import { getData } from '../helpers/api';
 
+import './styleTemplates';
+
 export default function CardSellersOrders() {
   const [orders, setOrders] = useState([]);
   const userData = JSON.parse(localStorage.getItem('user'));
@@ -16,7 +18,7 @@ export default function CardSellersOrders() {
     getSales();
   }, [userData.token]);
   return (
-    <div>
+    <section className="card-orders">
       {orders.map((order) => (
         <SellerOrder
           key={ order.id }
@@ -28,6 +30,6 @@ export default function CardSellersOrders() {
           address={ `${order.deliveryAddress} ${order.deliveryNumber}` }
         />
       ))}
-    </div>
+    </section>
   );
 }

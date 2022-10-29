@@ -21,11 +21,9 @@ export default function CardSaleDetails() {
   useEffect(() => {
     async function getSale() {
       const { data } = await getData(`/sale/${id}`, userData.token);
-      console.log('SALE', data);
       setOrder(data);
     }
     getSale();
-    console.log('entrou no useEffect');
   }, [id, userData.token, updated]);
 
   if (order) {
@@ -44,5 +42,5 @@ export default function CardSaleDetails() {
     );
   }
 
-  return <h1>Loading</h1>;
+  return null;
 }

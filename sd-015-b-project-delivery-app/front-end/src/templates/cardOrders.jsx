@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import Order from '../components/order';
 import { getData } from '../helpers/api';
 
+import './styleTemplates';
+
 export default function CardOrders() {
   const [orders, setOrders] = useState([]);
   const userData = JSON.parse(localStorage.getItem('user'));
@@ -16,7 +18,8 @@ export default function CardOrders() {
     getSales();
   }, [userData.token]);
   return (
-    <div>
+    <section className="card-orders">
+      {orders.length === 0 && <h3>Você ainda não realizou uma compra.</h3>}
       {orders.map((order) => (
         <Order
           key={ order.id }
@@ -27,6 +30,6 @@ export default function CardOrders() {
           onClick={ () => navigate(`/customer/orders/${order.id}`) }
         />
       ))}
-    </div>
+    </section>
   );
 }

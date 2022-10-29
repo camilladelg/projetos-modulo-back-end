@@ -1,4 +1,5 @@
 import React from 'react';
+import Banner from '../components/banner';
 import CardHeader from '../templates/cardHeader';
 import CardSellerOrdersDetails from '../templates/cardSellerOrdersDetails';
 
@@ -6,11 +7,12 @@ export default function SellerOrderDetailsPage() {
   const userData = JSON.parse(localStorage.getItem('user'));
 
   return (
-    <div>
+    <>
       <CardHeader
         userName={ userData.name }
       />
+      <Banner namePage="Detalhes do pedido" />
       <CardSellerOrdersDetails />
-    </div>
+    </>
   );
 }

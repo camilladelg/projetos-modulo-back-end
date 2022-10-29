@@ -2,6 +2,8 @@ import PropTypes from 'prop-types';
 import React, { useContext, useEffect } from 'react';
 import ContextGeneral from '../context/contextGeneral';
 
+import './styleComponents';
+
 export default function PriceSum({ dataTestId }) {
   const { cart, total, setTotal } = useContext(ContextGeneral);
 
@@ -15,9 +17,11 @@ export default function PriceSum({ dataTestId }) {
 
   if (total <= 0) return null;
   return (
-    <span data-testid={ dataTestId }>
-      { `R$ ${total.toFixed(2)}`.replace('.', ',') }
-    </span>
+    <section>
+      <span data-testid={ dataTestId }>
+        { ` R$ ${total.toFixed(2)}`.replace('.', ',') }
+      </span>
+    </section>
   );
 }
 

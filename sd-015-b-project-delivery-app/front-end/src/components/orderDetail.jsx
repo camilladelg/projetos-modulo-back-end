@@ -1,7 +1,11 @@
+/* eslint-disable react/forbid-prop-types */
 import React from 'react';
 import PropTypes from 'prop-types';
-// {  id, seller, date, status, products, totalPrice, dataTestIdStatus }
+import './styleComponents';
+
 export default function OrderDetail(props) {
+  const [classStatus, setClassStatus] = React.useState(null);
+
   const {
     id,
     seller,
@@ -20,84 +24,125 @@ export default function OrderDetail(props) {
     'Valor Unitário',
     'Sub-Total',
   ];
+
+  React.useEffect(() => {
+    switch (status) {
+    case 'Entregue':
+      setClassStatus('item-delivery-check');
+      break;
+    case 'Pendente':
+      setClassStatus('item-delivery-pending');
+      break;
+    case 'Preparando':
+      setClassStatus('item-delivery-preparing');
+      break;
+    case 'Em Trânsito':
+      setClassStatus('item-delivery-preparing-intransit');
+      break;
+    default:
+      break;
+    }
+  }, [status]);
+
   if (id) {
     return (
-      <section>
-        <div>
-          <h1 data-testid="customer_order_details__element-order-details-label-order-id">
-            {id}
-          </h1>
-          <h1
+      <section className="card-order-detail">
+        <section className="order-details-info">
+          <h3 data-testid="customer_order_details__element-order-details-label-order-id">
+            {`Número do pedido: ${id}`}
+          </h3>
+          <h3
             data-testid="customer_order_details__element-order-details-label-seller-name"
           >
-            {seller}
-          </h1>
-          <h1
+            {`Vendedor(a): ${seller}`}
+          </h3>
+          <h3
             data-testid="customer_order_details__element-order-details-label-order-date"
           >
-            {date}
-          </h1>
-          <h1 data-testid={ dataTestIdStatus }>{status}</h1>
+            {`Realizado em:  ${date}`}
+          </h3>
+          <h3 data-testid={ dataTestIdStatus }>
+            Status:
+            <span className={ classStatus }>
+              {' '}
+              {status}
+            </span>
+            {' '}
+          </h3>
+        </section>
+        <section className="container-tableItems">
+          <table className="table-items">
+            <thead className="table-items__thead-details">
+              <tr>
+                {heads.map((head, i) => (
+                  <th key={ i }>{head}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody className="table-items__tbody">
+              {products.map((product, i) => (
+                <tr key={ product.id }>
+                  <td
+                    data-testid={
+                      `customer_order_details__element-order-table-item-number-${i}`
+                    }
+                  >
+                    <span className="item-table-mobile">Item:&nbsp;</span>
+                    {i + 1}
+                  </td>
+                  <td
+                    data-testid={ `customer_order_details_element-order-table-name-${i}` }
+                  >
+                    <span className="item-table-mobile">Descrição:&nbsp;</span>
+                    {product.name}
+                  </td>
+                  <td
+                    data-testid={
+                      `customer_order_details__element-order-table-quantity-${i}`
+                    }
+                  >
+                    <span className="item-table-mobile">Quantidade:&nbsp;</span>
+                    {product.SalesProduct.quantity}
+                  </td>
+                  <td
+                    data-testid={
+                      `customer_order_details__element-order-table-sub-total${i}`
+                    }
+                  >
+                    <span className="item-table-mobile">Valor Unitário:&nbsp;</span>
+                    {(1 * product.price).toFixed(2).replace('.', ',')}
+                  </td>
+                  <td
+                    data-testid={ `customer_order_details_element-order-total-price${i}` }
+                  >
+                    <span className="item-table-mobile">Sub-total:&nbsp;</span>
+                    {(Number(product.price) * product.SalesProduct.quantity)
+                      .toFixed(2)
+                      .replace('.', ',')}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </section>
+        <section className="order-detail-buttons">
+          <h3
+            data-testid="customer_order_details__element-order-total-price"
+            className="button container-pricesum__item"
+          >
+            {`Total: R$ ${Number(totalPrice).toFixed(2).replace('.', ',')}`}
+          </h3>
+
           <button
             type="button"
             data-testid="customer_order_details__button-delivery-check"
             onClick={ handleClick }
             disabled={ disabled }
+            className="button btn-status-order-details"
           >
             MARCAR COMO ENTREGUE
           </button>
-        </div>
-        <table>
-          <thead>
-            <tr>
-              {heads.map((head, i) => (
-                <th key={ i }>{head}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {products.map((product, i) => (
-              <tr key={ product.id }>
-                <td
-                  data-testid={
-                    `customer_order_details__element-order-table-item-number-${i}`
-                  }
-                >
-                  {i + 1}
-                </td>
-                <td
-                  data-testid={ `customer_order_details__element-order-table-name-${i}` }
-                >
-                  {product.name}
-                </td>
-                <td
-                  data-testid={
-                    `customer_order_details__element-order-table-quantity-${i}`
-                  }
-                >
-                  {product.SalesProduct.quantity}
-                </td>
-                <td
-                  data-testid={
-                    `customer_order_details__element-order-table-sub-total${i}`
-                  }
-                >
-                  {(1 * product.price).toFixed(2).replace('.', ',')}
-                </td>
-                <td
-                  data-testid={ `customer_order_details__element-order-total-price-${i}` }
-                >
-                  {(Number(product.price) * product.SalesProduct.quantity)
-                    .toFixed(2)
-                    .replace('.', ',')}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        <h1 data-testid="customer_order_details__element-order-total-price">
-          {`Total: R$ ${Number(totalPrice).toFixed(2).replace('.', ',')}`}
-        </h1>
+        </section>
       </section>
     );
   }
@@ -109,7 +154,7 @@ OrderDetail.propTypes = {
   date: PropTypes.string.isRequired,
   totalPrice: PropTypes.string.isRequired,
   seller: PropTypes.string.isRequired,
-  disabled: PropTypes.func.isRequired,
+  disabled: PropTypes.any.isRequired,
   products: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.number,

@@ -29,7 +29,6 @@ export default function CardSellerOrdersDetails() {
   useEffect(() => {
     async function getSale() {
       const { data } = await getData(`/sale/${id}`, userData.token);
-      console.log('SALE', data);
       setOrder(data);
     }
     getSale();
@@ -51,5 +50,5 @@ export default function CardSellerOrdersDetails() {
     );
   }
 
-  return <h1>Loading</h1>;
+  return null;
 }

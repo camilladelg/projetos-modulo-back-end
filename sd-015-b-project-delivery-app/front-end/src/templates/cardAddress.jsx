@@ -6,6 +6,9 @@ import Button from '../components/button';
 import { getData, postRequestToken } from '../helpers/api';
 import ContextGeneral from '../context/contextGeneral';
 
+import '../components/styleComponents';
+import './styleTemplates';
+
 export default function CardAddress() {
   const [sellers, setSellers] = useState([]);
   const userData = JSON.parse(localStorage.getItem('user'));
@@ -36,53 +39,56 @@ export default function CardAddress() {
       deliveryNumber: Number(deliveryNumber),
       cart: cart.map((c) => ({ id: c.id, quantity: c.quantity })),
     };
-    console.log(body);
     const { data } = await postRequestToken('/sale', body, userData.token);
     setCart([]);
-    console.log(data);
 
     navigate(`/customer/orders/${data.id}`);
   };
 
   return (
-    <section>
-      {console.log('selers', sellers)}
-      {console.log('selers', seller)}
+    <section className="container-card-adress">
+      <h2 className="container-card-adress__title">Detalhe e endereço de entrega</h2>
+      <section>
+        <span className="container-card-adress__span">P.Vendedora Resposável</span>
+        <section className="container-card-adress__card-infos">
+          <Select
+            labelText=""
+            name="select_sellers"
+            value={ seller }
+            options={ sellers }
+            dataTestId="customer_checkout__select-seller"
+            onChange={ ({ target }) => setSeller(target.value) }
+            className="card-infos__item card-adress__seller"
+          />
+          <TextInput
+            name="Address"
+            dataTestId="customer_checkout__input-address"
+            onChange={ ({ target }) => setDeliveryAddress(target.value) }
+            value={ deliveryAddress }
+            type="text"
+            className="card-infos__item  card-adress__adress"
+            placeholder="Endereço"
+          />
+          <TextInput
+            name="Number"
+            dataTestId="customer_checkout__input-addressNumber"
+            onChange={ ({ target }) => setDeliveryNumber(target.value) }
+            value={ deliveryNumber }
+            type="number"
+            className="card-infos__item  card-adress__number"
+            placeholder="Nº"
+          />
+        </section>
+        <Button
+          dataTestId="customer_checkout__button-submit-order"
+          handleClick={ requestPost }
+          name="Finalizar Pedido"
+          disabled={ !!(deliveryAddress === '' || deliveryNumber < 0) }
+          type="button"
+          className="button container-card-adress__button"
+        />
 
-      <Select
-        name="select_sellers"
-        value={ seller }
-        options={ sellers }
-        dataTestId="customer_checkout__select-seller"
-        onChange={ ({ target }) => setSeller(target.value) }
-        className="select_sellers"
-        labelText="Vendedores"
-        // defaultValue={ seller }
-      />
-      <TextInput
-        name="Address"
-        dataTestId="customer_checkout__input-address"
-        onChange={ ({ target }) => setDeliveryAddress(target.value) }
-        value={ deliveryAddress }
-        type="text"
-        className=""
-      />
-      <TextInput
-        name="Number"
-        dataTestId="customer_checkout__input-addressNumber"
-        onChange={ ({ target }) => setDeliveryNumber(target.value) }
-        value={ deliveryNumber }
-        type="number"
-        className=""
-      />
-      <Button
-        dataTestId="customer_checkout__button-submit-order"
-        handleClick={ requestPost }
-        name="Finalizar_Pedido"
-        disabled={ !!(deliveryAddress === '' || deliveryNumber < 0) }
-        type="button"
-        className=""
-      />
+      </section>
     </section>
   );
 }
